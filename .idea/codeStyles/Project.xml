@@ -14,6 +14,9 @@
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
       <option name="CHAINED_CALL_DOT_ON_NEW_LINE" value="false" />
     </JSCodeStyleSettings>
+    <ScalaCodeStyleSettings>
+      <option name="ALIGN_IN_COLUMNS_CASE_BRANCH" value="true" />
+    </ScalaCodeStyleSettings>
     <TypeScriptCodeStyleSettings version="0">
       <option name="JSDOC_INCLUDE_TYPES" value="true" />
       <option name="FORCE_SEMICOLON_STYLE" value="true" />

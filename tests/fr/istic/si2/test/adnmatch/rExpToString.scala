@@ -15,12 +15,6 @@ import fr.istic.si2.adnmatchlib._
 
 
 class rExpToString {
-
-  def checkIfSame(): Boolean = {
-
-  }
-
-
   @Test
   def oneBase(): Unit = {
     assertTrue(rExpToString(UneBase(A)) == "A")
