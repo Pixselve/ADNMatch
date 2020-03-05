@@ -21,7 +21,7 @@ object ADNMatchV1 extends App {
   val exampleRExp3 = Repete(UneBase(G))
 
   def userLoop(): Unit = {
-    val exp = askSequence()
+    val exp = askExpression()
     println(rExpToString(exp))
     println(listeBasesToString(getOrElseNil(deroule(exp))))
     println("Recommencer ? y/N")
@@ -35,10 +35,10 @@ object ADNMatchV1 extends App {
 
 
 
-  def askSequence(): RExp = {
+  def askExpression(): RExp = {
     println("Entrez une expression")
     litRExp(scala.io.StdIn.readLine()) match {
-      case None      => println("Expression incorrecte"); askSequence()
+      case None      => println("Expression incorrecte"); askExpression()
       case Some(exp) => exp
     }
   }
