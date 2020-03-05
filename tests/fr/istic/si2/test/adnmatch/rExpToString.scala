@@ -16,58 +16,71 @@ import fr.istic.si2.adnmatchlib._
 
 class rExpToString {
 
-  def checkIfSame(): Boolean = {
-
+  def checkIfSame(stringToCheck: String): Boolean = {
+    litRExp(stringToCheck) match {
+      case None => false
+      case Some(exp) => rExpToString(exp) == stringToCheck
+    }
   }
 
 
   @Test
   def oneBase(): Unit = {
-    assertTrue(rExpToString(UneBase(A)) == "A")
+    assertTrue(checkIfSame("A"))
   }
 
   @Test
   def anyBase(): Unit = {
-    assertTrue(rExpToString(Nqb) == ".")
+    assertTrue(checkIfSame("."))
   }
 
   @Test
   def concatenate(): Unit = {
-    assertTrue(rExpToString(Concat(UneBase(A), UneBase(T))) == "AT")
+    assertTrue(checkIfSame("AT"))
+  }
+
+  @Test
+  def concatenateGroupLeft(): Unit = {
+    assertTrue(checkIfSame("(A)T"))
+  }
+
+  @Test
+  def concatenateGroupRight(): Unit = {
+    assertTrue(checkIfSame("A(T)"))
+  }
+
+  @Test
+  def concatenateGroupBoth(): Unit = {
+    assertTrue(checkIfSame("(A)(T)"))
   }
 
   @Test
   def repeat(): Unit = {
-    assertTrue(rExpToString(Repete(UneBase(A))) == "A*")
+    assertTrue(checkIfSame("A*"))
+  }
+
+  @Test
+  def repeatGroup(): Unit = {
+    assertTrue(checkIfSame("(A)*"))
   }
 
   @Test
   def repeatN(): Unit = {
-    assertTrue(rExpToString(NFois(UneBase(A), 5)) == "A{5}")
+    assertTrue(checkIfSame("A{4}"))
+  }
+
+  @Test
+  def repeatGroupN(): Unit = {
+    assertTrue(checkIfSame("(A){4}"))
   }
 
   @Test
   def impossible(): Unit = {
-    assertTrue(rExpToString(Impossible) == "@")
+    assertTrue(checkIfSame("%"))
   }
 
   @Test
   def empty(): Unit = {
-    assertTrue(rExpToString(Vide) == "%")
-  }
-
-  @Test
-  def complexAllInOne1(): Unit = {
-    assertTrue(rExpToString(Vide) == "A(TG)*A")
-  }
-
-  @Test
-  def complexAllInOne2(): Unit = {
-    assertTrue(rExpToString(Vide) == "%")
-  }
-
-  @Test
-  def complexAllInOne3(): Unit = {
-    assertTrue(rExpToString(Vide) == "%")
+    assertTrue(checkIfSame("@"))
   }
 }
