@@ -3,7 +3,6 @@ package fr.istic.si2.test.adnmatch
 import fr.istic.si2.adnmatch
 import org.junit.Test
 import org.junit.Assert._
-
 import util.Random
 import fr.istic.si2.testerApp._
 import fr.istic.si2.moreAssertions._
@@ -41,17 +40,17 @@ class rExpToString {
 
   @Test
   def concatenateGroupLeft(): Unit = {
-    assertTrue(checkIfSame("(A)T"))
+    assertTrue(checkIfSame("(A|C)T"))
   }
 
   @Test
   def concatenateGroupRight(): Unit = {
-    assertTrue(checkIfSame("A(T)"))
+    assertTrue(checkIfSame("A(T|C)"))
   }
 
   @Test
   def concatenateGroupBoth(): Unit = {
-    assertTrue(checkIfSame("(A)(T)"))
+    assertTrue(checkIfSame("(A|C)(T|C)"))
   }
 
   @Test
@@ -61,7 +60,7 @@ class rExpToString {
 
   @Test
   def repeatGroup(): Unit = {
-    assertTrue(checkIfSame("(A)*"))
+    assertTrue(checkIfSame("(A|C)*"))
   }
 
   @Test
@@ -71,7 +70,7 @@ class rExpToString {
 
   @Test
   def repeatGroupN(): Unit = {
-    assertTrue(checkIfSame("(A){4}"))
+    assertTrue(checkIfSame("(A|C){4}"))
   }
 
   @Test

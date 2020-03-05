@@ -23,7 +23,7 @@ object ADNMatchV1 extends App {
   def userLoop(): Unit = {
     val exp = askSequence()
     println(rExpToString(exp))
-    println(listToString(getOrElseNil(deroule(exp))))
+    println(listeBasesToString(getOrElseNil(deroule(exp))))
     println("Recommencer ? y/N")
 
     scala.io.StdIn.readLine() match {
@@ -33,12 +33,6 @@ object ADNMatchV1 extends App {
 
   }
 
-  def listToString(list: List[Base]): String = {
-    list match {
-      case Nil           => ""
-      case first :: rest => s"${first}${listToString(rest)}"
-    }
-  }
 
   def askSequence(): RExp = {
     println("Entrez une expression")

@@ -24,7 +24,6 @@ object RExpMatcher {
       case Impossible => Impossible
       case Vide => Vide
       case UneBase(base) => if (base == base) Vide else Impossible
-      case Concat(e1, e2) =>
     }
   }
 

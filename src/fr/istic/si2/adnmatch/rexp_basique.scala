@@ -47,7 +47,7 @@ object FonctionsRExp {
    */
   def listeBasesToString(lb: List[Base]): String = {
     lb match {
-      case Nil          => ""
+      case Nil => ""
       case base :: rest => base + listeBasesToString(rest)
     }
   }
@@ -59,37 +59,40 @@ object FonctionsRExp {
    */
   def rExpToString(e: RExp): String = {
     e match {
-      case Impossible     => "@"
-      case Vide           => "%"
-      case Nqb            => "."
-      case UneBase(b)     => b.toString
-      case Choix(e1, e2)  => (e1, e2) match {
+      case Impossible => "@"
+      case Vide => "%"
+      case Nqb => "."
+      case UneBase(b) => b.toString
+      case Choix(e1, e2) => (e1, e2) match {
         case (UneBase(_), UneBase(_)) => s"${rExpToString(e1)}|${rExpToString(e2)}"
-        case (_, UneBase(_))          => s"(${rExpToString(e1)})|${rExpToString(e2)}"
-        case (UneBase(_), _)          => s"${rExpToString(e1)}|(${rExpToString(e2)})"
-        case _                        => s"(${rExpToString(e1)})|(${rExpToString(e2)})"
+        case (_, UneBase(_)) => s"(${rExpToString(e1)})|${rExpToString(e2)}"
+        case (UneBase(_), _) => s"${rExpToString(e1)}|(${rExpToString(e2)})"
+        case _ => s"(${rExpToString(e1)})|(${rExpToString(e2)})"
       }
       case Concat(e1, e2) => (e1, e2) match {
         case (UneBase(_), UneBase(_)) => s"${rExpToString(e1)}${rExpToString(e2)}"
-        case (_, UneBase(_))          => s"(${rExpToString(e1)})${rExpToString(e2)}"
-        case (UneBase(_), _)          => s"${rExpToString(e1)}(${rExpToString(e2)})"
-        case _                        => s"(${rExpToString(e1)})(${rExpToString(e2)})"
+        case (_, UneBase(_)) => s"(${rExpToString(e1)})${rExpToString(e2)}"
+        case (UneBase(_), _) => s"${rExpToString(e1)}(${rExpToString(e2)})"
+        case _ => s"(${rExpToString(e1)})(${rExpToString(e2)})"
       }
-      case Repete(e)      => e match {
+      case Repete(e) => e match {
         case UneBase(_) => s"${rExpToString(e)}*"
-        case _          => s"(${rExpToString(e)})*"
+        case _ => s"(${rExpToString(e)})*"
       }
-      case NFois(e, n)    => e match {
-        case UneBase(_) => s"${rExpToString(e)}{${n}"
-        case _          => s"(${rExpToString(e)}){${n}"
+      case NFois(e, n) => e match {
+        case UneBase(_) => s"${rExpToString(e)}{${n}}"
+        case _ => s"(${rExpToString(e)}){${n}}"
       }
     }
   }
 
-
-  def getOrElseNil(any: Option[List[Base]]) = {
-    any match {
-      case None        => Nil
+  /**
+   * @param value Une liste de bases
+   * @return La liste de base si l'entrée est présente ou Nil sinon
+   */
+  def getOrElseNil(value: Option[List[Base]]): List[Base] = {
+    value match {
+      case None => Nil
       case Some(value) => value
     }
   }
@@ -104,14 +107,14 @@ object FonctionsRExp {
    */
   def deroule(e: RExp): Option[List[Base]] = {
     e match {
-      case Impossible     => None
-      case Vide           => None
-      case Nqb            => Some(A :: Nil)
-      case UneBase(b)     => Some(b :: Nil)
-      case Choix(e1, _)   => deroule(e1)
+      case Impossible => None
+      case Vide => None
+      case Nqb => Some(A :: Nil)
+      case UneBase(b) => Some(b :: Nil)
+      case Choix(e1, _) => deroule(e1)
       case Concat(e1, e2) => Some(getOrElseNil(deroule(e1)) ++ getOrElseNil(deroule(e2)))
-      case Repete(e)      => deroule(NFois(e, 5))
-      case NFois(e, n)    => n match {
+      case Repete(e) => deroule(NFois(e, 5))
+      case NFois(e, n) => n match {
         case 1 => deroule(e)
         case _ => Some(getOrElseNil(deroule(e)) ++ getOrElseNil(deroule(NFois(e, n - 1))))
       }
