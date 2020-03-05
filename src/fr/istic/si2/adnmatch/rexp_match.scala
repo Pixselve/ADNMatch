@@ -19,7 +19,14 @@ object RExpMatcher {
    * @return la dérivée de Brzozowski de e par rapport à b
    */
   // TODO V2
-  def derivee(e: RExp, b: Base): RExp = ???
+  def derivee(e: RExp, b: Base): RExp = {
+    e match {
+      case Impossible => Impossible
+      case Vide => Vide
+      case UneBase(base) => if (base == base) Vide else Impossible
+      case Concat(e1, e2) =>
+    }
+  }
 
   /**
    * @param e une expression régulière
