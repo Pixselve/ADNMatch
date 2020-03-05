@@ -34,6 +34,7 @@ object ADNMatchV1 extends App {
   }
 
 
+
   def askSequence(): RExp = {
     println("Entrez une expression")
     litRExp(scala.io.StdIn.readLine()) match {

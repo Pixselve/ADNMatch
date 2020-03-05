@@ -24,6 +24,9 @@ object RExpMatcher {
       case Impossible => Impossible
       case Vide => Vide
       case UneBase(base) => if (base == base) Vide else Impossible
+      case Choix(e1, e2) => Concat(derivee(e1, b), derivee(e2, b))
+      case Repete(e) => Concat(derivee(e, b), Repete(e))
+      case Concat(e1, e2) =>
     }
   }
 
