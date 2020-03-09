@@ -149,13 +149,49 @@ object RExpMatcher {
    * @return s'il existe, le plus petit prefixe de lb qui est décrit par e
    */
   // TODO V2
-  def prefixeMatch(e: RExp, lb: List[Base]): Option[List[Base]] = {
+  def prefixeMatchBACK(e: RExp, lb: List[Base]): Option[List[Base]] = {
     lb match {
       case Nil           => None
-      case first :: rest => {
+      case first :: rest =>
+        if (checkIfThereIsARegExMatch(e, first :: rest)) {
+          Some(first :: rest)
+        } else {
+          prefixeMatch(e, rest)
+        }
+    }
+  }
 
+  def prefixeMatch(e: RExp, lb: List[Base]): Option[List[Base]] = {
+    (e, lb) match {
+      case (Vide, _)          => Some(lb)
+      case (Impossible, _)    => None
+      case (_, Nil)           => None
+      case (_, first :: rest) =>
+        prefixeMatch(derivee(e, first), lb) match {
+          case None    => prefixeMatch(e, rest)
+          case Some(_) => Some(lb)
+        }
+    }
+  }
+
+  def checkIfThereIsARegExMatch(e: RExp, lb: List[Base]): Boolean = {
+    lb match {
+      case Nil           => false
+      case first :: rest => derivee(e, first) match {
+        case Vide       => true
+        case Impossible => false
+        case value      => checkIfThereIsARegExMatch(value, rest)
       }
     }
+
+
+
+    //    (e, lb) match {
+    //      case (Vide, _)              => true
+    //      case (Impossible, _)        => false
+    //      case (_, Nil)               => false
+    //      case (value, first :: rest) => checkIfThereIsARegExMatch(derivee(value, first), rest)
+    //    }
   }
 
   /**
