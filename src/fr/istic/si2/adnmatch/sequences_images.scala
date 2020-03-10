@@ -20,7 +20,11 @@ object SequencesImages {
     }
   }
 
-
+  /**
+   * @param lmb une liste de bases marquées
+   * @param tligne entier strictement positif, représentant la taille d'une ligne en nombre de bases marquées
+   * @return la liste lmb sans les tligne premieres base marquées
+   */
   def recupere_reste(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
     tligne match {
       case 0 => lmb
@@ -31,6 +35,11 @@ object SequencesImages {
     }
   }
 
+  /**
+   * @param lmb une liste de bases marquées
+   * @param tligne entier strictement positif, représentant la taille d'une ligne en nombre de bases marquées
+   * @return les "tligne" premieres bases marquées de la liste lmb
+   */
   def recupere_ligne(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
     tligne match {
       case 0 => Nil
@@ -45,7 +54,15 @@ object SequencesImages {
    * graphiquement les bases azotées.
    */
   val fontSizeBase: Int = 14
+
+  /**
+   * Couleur du texte quand il est marqué
+   */
   val color_Marque : Color = new Color(255, 0, 0, 255)
+
+  /**
+   * Couleur du texte quand il n'est pas marqué
+   */
   val color_NonMarque : Color = new Color(0, 0, 0, 255)
   /**
    * @param mb une base azotée marquée
@@ -58,9 +75,9 @@ object SequencesImages {
       case (Marque,C) =>FillColor(Text("C",fontSizeBase),color_Marque)
       case (Marque,G) =>FillColor(Text("G",fontSizeBase),color_Marque)
       case (NonMarque,A) =>FillColor(Text("A",fontSizeBase),color_NonMarque)
-      case (NonMarque,T) =>FillColor(Text("A",fontSizeBase),color_NonMarque)
-      case (NonMarque,C) =>FillColor(Text("A",fontSizeBase),color_NonMarque)
-      case (NonMarque,G) =>FillColor(Text("A",fontSizeBase),color_NonMarque)
+      case (NonMarque,T) =>FillColor(Text("T",fontSizeBase),color_NonMarque)
+      case (NonMarque,C) =>FillColor(Text("C",fontSizeBase),color_NonMarque)
+      case (NonMarque,G) =>FillColor(Text("G",fontSizeBase),color_NonMarque)
     }
   }
 
