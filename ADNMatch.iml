@@ -20,7 +20,7 @@
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="org.scala-ide.sdt.launching.SCALA_CONTAINER" level="application" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="1.8.0_231" jdkType="JavaSDK" />
     <orderEntry type="module-library">
       <library name="si2.jar">
         <CLASSES>

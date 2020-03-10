@@ -9,12 +9,10 @@ import fr.istic.si2.adnmatch.FonctionsRExp._
  * indiquant les résultats de recherche.
  */
 sealed trait Marqueur
+
 case object Marque extends Marqueur
+
 case object NonMarque extends Marqueur
-
-case object BelongToASubSequence extends Marqueur
-
-case object DoNotBelongToASubSequence extends Marqueur
 
 object RExpMatcher {
 
@@ -120,7 +118,7 @@ object RExpMatcher {
   def sequenceDecrite(lb: List[Base]): List[(Marqueur, Base)] = {
     lb match {
       case Nil           => Nil
-      case first :: rest => (BelongToASubSequence, first) :: sequenceDecrite(rest)
+      case first :: rest => (Marque, first) :: sequenceDecrite(rest)
     }
   }
 
@@ -132,7 +130,7 @@ object RExpMatcher {
   def sequenceNonDecrite(lb: List[Base]): List[(Marqueur, Base)] = {
     lb match {
       case Nil           => Nil
-      case first :: rest => (DoNotBelongToASubSequence, first) :: sequenceDecrite(rest)
+      case first :: rest => (NonMarque, first) :: sequenceDecrite(rest)
     }
   }
 
@@ -218,22 +216,34 @@ object RExpMatcher {
    * @param lbm une liste de bases marquées selon un résultat de recherche
    * @return une description textuelle du résultat pour l'utilisateur
    */
-  // TODO V2
-  def messageResultat(lbm: List[(Marqueur, Base)]): String = ???
+  def messageResultat(lbm: List[(Marqueur, Base)]): String = {
+    lbm match {
+      case Nil                    => "Il n'y a pas de sous-séquence"
+      case (NonMarque, _) :: rest => messageResultat(rest)
+      case (Marque, _) :: _       => "Il y a au moins une sous-séquence"
+    }
+  }
 
   /**
    * @param lb une liste de bases azotées marquées
    * @return liste des mêmes bases que lb, mais où tous les marqueurs indiquent
    *         une non-correspondance
    */
-  // TODO V3
-  def annulerResultat(lb: List[(Marqueur, Base)]): List[(Marqueur, Base)] = ???
+  def annulerResultat(lb: List[(Marqueur, Base)]): List[(Marqueur, Base)] = {
+    lb match {
+      case Nil               => Nil
+      case (_, base) :: rest => (NonMarque, base) :: annulerResultat(rest)
+    }
+  }
 
   /**
    * @param lbm une liste de bases azotées marquées
    * @return la liste des bases de lbm dont on a oublié les marqueurs, en conservant l'ordre
    */
-  // TODO V3
-  def sansMarqueurs(lbm: List[(Marqueur, Base)]): List[Base] = ???
-
+  def sansMarqueurs(lbm: List[(Marqueur, Base)]): List[Base] = {
+    lbm match {
+      case Nil               => Nil
+      case (_, base) :: rest => base :: sansMarqueurs(rest)
+    }
+  }
 }
