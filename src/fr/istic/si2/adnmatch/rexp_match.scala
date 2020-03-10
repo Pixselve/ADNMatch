@@ -9,6 +9,8 @@ import fr.istic.si2.adnmatch.FonctionsRExp._
  * indiquant les résultats de recherche.
  */
 sealed trait Marqueur
+case object Marque extends Marqueur
+case object NonMarque extends Marqueur
 
 case object BelongToASubSequence extends Marqueur
 

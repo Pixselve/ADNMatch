@@ -16,6 +16,20 @@ object SequencesImages {
   // TODO V3
   def lignes(lmb: List[(Marqueur, Base)], tligne: Int): List[List[(Marqueur, Base)]] = ???
 
+
+  def recupere_reste(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
+
+  }
+
+  def recupere_ligne(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
+    tligne match {
+      case 0 => Nil
+      case _ => lmb match {
+        case Nil => Nil
+        case first :: rest =>
+      }
+    }
+  }
   /**
    * Taille du texte à utiliser pour représenter
    * graphiquement les bases azotées.
