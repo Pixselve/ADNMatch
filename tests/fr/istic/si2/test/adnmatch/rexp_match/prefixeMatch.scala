@@ -26,8 +26,8 @@ class prefixeMatch {
 
   @Test
   def repeatSingleBase(): Unit = {
-    assertEquals(Some(List(T, T, T, A, G, A)), prefixeMatch(NFois(UneBase(T), 3), List(C, C, T, T, T, A, G, A)))
-    assertEquals(Some(List(T, T, T, A, G, A)), prefixeMatch(NFois(UneBase(T), 3), List(T, A, T, T, C, C, T, T, T, A, G, A)))
+//    assertEquals("Do not starts with a T, search for a repetition of 3 T", Some(List(T, T, T, A, G, A)), prefixeMatch(NFois(UneBase(T), 3), List(C, C, T, T, T, A, G, A)))
+    assertEquals("Starts with a T, search for a repetition of 3 T", Some(List(T, T, T, A, G, A)), prefixeMatch(NFois(UneBase(T), 3), List(T, A, T, T, C, C, T, T, T, A, G, A)))
 
   }
 
