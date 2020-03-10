@@ -20,7 +20,11 @@ object SequencesImages {
     }
   }
 
-
+  /**
+   * @param lmb une liste de bases marquées
+   * @param tligne entier strictement positif, représentant la taille d'une ligne en nombre de bases marquées
+   * @return la liste lmb sans les tligne premieres base marquées
+   */
   def recupere_reste(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
     tligne match {
       case 0 => lmb
@@ -31,6 +35,11 @@ object SequencesImages {
     }
   }
 
+  /**
+   * @param lmb une liste de bases marquées
+   * @param tligne entier strictement positif, représentant la taille d'une ligne en nombre de bases marquées
+   * @return les "tligne" premieres bases marquées de la liste lmb
+   */
   def recupere_ligne(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
     tligne match {
       case 0 => Nil
@@ -47,18 +56,41 @@ object SequencesImages {
   val fontSizeBase: Int = 14
 
   /**
+   * Couleur du texte quand il est marqué
+   */
+  val color_Marque : Color = new Color(255, 0, 0, 255)
+
+  /**
+   * Couleur du texte quand il n'est pas marqué
+   */
+  val color_NonMarque : Color = new Color(0, 0, 0, 255)
+  /**
    * @param mb une base azotée marquée
    * @return une image représentant la base avec son marqueur visuel
    */
-  // TODO V3
-  def marqueurBaseToImage(mb: (Marqueur, Base)): Image = ???
+  def marqueurBaseToImage(mb: (Marqueur, Base)): Image = {
+    mb match {
+      case (Marque,A) => FillColor(Text("A",fontSizeBase),color_Marque)
+      case (Marque,T) =>FillColor(Text("T",fontSizeBase),color_Marque)
+      case (Marque,C) =>FillColor(Text("C",fontSizeBase),color_Marque)
+      case (Marque,G) =>FillColor(Text("G",fontSizeBase),color_Marque)
+      case (NonMarque,A) =>FillColor(Text("A",fontSizeBase),color_NonMarque)
+      case (NonMarque,T) =>FillColor(Text("T",fontSizeBase),color_NonMarque)
+      case (NonMarque,C) =>FillColor(Text("C",fontSizeBase),color_NonMarque)
+      case (NonMarque,G) =>FillColor(Text("G",fontSizeBase),color_NonMarque)
+    }
+  }
 
   /**
    * @param ligne une liste de bases azotées marquées
    * @return une image représentant les bases marquées de ligne, dans l'ordre, toutes sur la même ligne
    */
-  // TODO V3
-  def imageUneLigne(ligne: List[(Marqueur, Base)]): Image = ???
+  def imageUneLigne(ligne: List[(Marqueur, Base)]): Image = {
+    ligne match {
+      case Nil => Empty
+      case first :: rest => Beside(marqueurBaseToImage(first), imageUneLigne(rest))
+    }
+  }
 
   /**
    * @param llignes une liste de listes de bases azotées marquées
@@ -66,7 +98,11 @@ object SequencesImages {
    *         Chaque élément de llignes est sur une ligne distincte.
    *         Les lignes sont visualisées les unes en dessous des autres.
    */
-  // TODO V3
-  def imagePlusieursLignes(llignes: List[List[(Marqueur, Base)]]): Image = ???
+  def imagePlusieursLignes(llignes: List[List[(Marqueur, Base)]]): Image = {
+    llignes match {
+      case Nil => Empty
+      case first :: rest => Below(imageUneLigne(first),imagePlusieursLignes(rest))
+    }
+  }
 
 }
