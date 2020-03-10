@@ -13,12 +13,22 @@ object SequencesImages {
    * @return une liste contenant des sous-listes de lmb, toutes de taille tligne, sauf la dernière qui
    *         peut être de taille inférieure.
    */
-  // TODO V3
-  def lignes(lmb: List[(Marqueur, Base)], tligne: Int): List[List[(Marqueur, Base)]] = ???
+  def lignes(lmb: List[(Marqueur, Base)], tligne: Int): List[List[(Marqueur, Base)]] = {
+    recupere_reste(lmb, tligne) match {
+      case Nil => List(lmb)
+      case rest => List(recupere_ligne(lmb, tligne)) ++ lignes(rest,  tligne)
+    }
+  }
 
 
   def recupere_reste(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
-
+    tligne match {
+      case 0 => lmb
+      case _ => lmb match {
+        case Nil => Nil
+        case first :: rest => recupere_reste(rest,  tligne-1)
+      }
+    }
   }
 
   def recupere_ligne(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
@@ -26,7 +36,7 @@ object SequencesImages {
       case 0 => Nil
       case _ => lmb match {
         case Nil => Nil
-        case first :: rest =>
+        case first :: rest => List(first) ++ recupere_ligne(rest,  tligne-1)
       }
     }
   }
