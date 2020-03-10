@@ -8,7 +8,7 @@ import fr.istic.si2.adnmatch.RExpMatcher._
 object SequencesImages {
 
   /**
-   * @param lmb une liste de bases marquées
+   * @param lmb    une liste de bases marquées
    * @param tligne entier strictement positif, représentant la taille d'une ligne en nombre de bases marquées
    * @return une liste contenant des sous-listes de lmb, toutes de taille tligne, sauf la dernière qui
    *         peut être de taille inférieure.
@@ -17,19 +17,18 @@ object SequencesImages {
   def lignes(lmb: List[(Marqueur, Base)], tligne: Int): List[List[(Marqueur, Base)]] = ???
 
 
-  def recupere_reste(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
-
-  }
+  def recupere_reste(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = ???
 
   def recupere_ligne(lmb: List[(Marqueur, Base)], tligne: Int): List[(Marqueur, Base)] = {
     tligne match {
       case 0 => Nil
       case _ => lmb match {
-        case Nil => Nil
-        case first :: rest =>
+        case Nil           => Nil
+        case first :: rest =>Nil
       }
     }
   }
+
   /**
    * Taille du texte à utiliser pour représenter
    * graphiquement les bases azotées.
