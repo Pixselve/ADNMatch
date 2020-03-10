@@ -33,6 +33,10 @@ class derivee {
   }
 
   @Test
+  def repeat(): Unit = {
+//    assertArrayEquals("Where the repetition is empty")
+  }
+  @Test
   def choiceGoodCase(): Unit = {
     assertEquals(Vide, derivee(Choix(UneBase(A), UneBase(C)), A))
     assertEquals(Vide, derivee(Choix(UneBase(A), UneBase(C)), C))
@@ -69,8 +73,4 @@ class derivee {
     assertEquals("(A|T)(G|C) could starts with a A and leaves (G|C)", Choix(UneBase(G), UneBase(C)), derivee(Concat(Choix(UneBase(A), UneBase(T)), Choix(UneBase(G), UneBase(C))), A))
   }
 
-  @Test
-  def concatE1Empty(): Unit = {
-
-  }
 }
