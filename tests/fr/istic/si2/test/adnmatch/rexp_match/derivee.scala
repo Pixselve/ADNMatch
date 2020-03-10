@@ -34,8 +34,9 @@ class derivee {
 
   @Test
   def repeat(): Unit = {
-//    assertArrayEquals("Where the repetition is empty")
+    assertEquals(Concat(UneBase(T), Repete(Concat(UneBase(A), UneBase(T)))), derivee(Repete(Concat(UneBase(A), UneBase(T))), A))
   }
+
   @Test
   def choiceGoodCase(): Unit = {
     assertEquals(Vide, derivee(Choix(UneBase(A), UneBase(C)), A))

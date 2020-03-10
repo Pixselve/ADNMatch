@@ -79,15 +79,11 @@ object RExpMatcher {
    */
   def checkIfRExpEqualsEmpty(e: RExp): Boolean = {
     e match {
-      case Impossible     => true
       case Vide           => true
-      case NFois(_, 0)    => true
-      case UneBase(_)     => false
-      case Nqb            => false
       case NFois(e, _)    => checkIfRExpEqualsEmpty(e)
-      case Repete(e)      => checkIfRExpEqualsEmpty(e)
       case Concat(e1, e2) => checkIfRExpEqualsEmpty(e1) && checkIfRExpEqualsEmpty(e2)
       case Choix(e1, e2)  => checkIfRExpEqualsEmpty(e1) || checkIfRExpEqualsEmpty(e2)
+      case _              => false
     }
   }
 
@@ -101,11 +97,11 @@ object RExpMatcher {
       case Nil           => false
       case first :: rest =>
         (derivee(e, first), rest) match {
-          case (Vide, Nil)     => true
-          case (_, Nil)        => false
-          case (Impossible, _) => false
-          case (Vide, _)       => false
-          case (value, _)      => matchComplet(value, rest)
+          case (Vide, Nil)      => true
+          case (Repete(_), Nil) => true
+          case (Impossible, _)  => false
+          case (Vide, _)        => false
+          case (value, _)       => matchComplet(value, rest)
         }
     }
   }
