@@ -126,68 +126,28 @@ object RExpMatcher {
   def sequenceNonDecrite(lb: List[Base]): List[(Marqueur, Base)] = {
     lb match {
       case Nil           => Nil
-      case first :: rest => (NonMarque, first) :: sequenceDecrite(rest)
+      case first :: rest => (NonMarque, first) :: sequenceNonDecrite(rest)
     }
   }
 
-
-  def listWithoutLastElement(list: List[Base]): List[Base] = {
-    list match {
-      case Nil             => Nil
-      case _ :: Nil        => Nil
-      case element :: rest => List(element) ++ listWithoutLastElement(rest)
-    }
-  }
 
   /**
    * @param e  une expression régulière
    * @param lb une liste de bases azotées
    * @return s'il existe, le plus petit prefixe de lb qui est décrit par e
    */
-  // TODO V2
-  def prefixeMatchBACK(e: RExp, lb: List[Base]): Option[List[Base]] = {
+  def prefixeMatch(e: RExp, lb: List[Base]): Option[List[Base]] = {
     lb match {
       case Nil           => None
-      case first :: rest =>
-        if (checkIfThereIsARegExMatch(e, first :: rest)) {
-          Some(first :: rest)
-        } else {
-          prefixeMatch(e, rest)
-        }
-    }
-  }
-
-  def prefixeMatch(e: RExp, lb: List[Base]): Option[List[Base]] = {
-    (e, lb) match {
-      case (Vide, _)          => Some(lb)
-      case (Impossible, _)    => None
-      case (_, Nil)           => None
-      case (_, first :: rest) =>
-        prefixeMatch(derivee(e, first), lb) match {
-          case None    => prefixeMatch(e, rest)
-          case Some(_) => Some(lb)
-        }
-    }
-  }
-
-  def checkIfThereIsARegExMatch(e: RExp, lb: List[Base]): Boolean = {
-    lb match {
-      case Nil           => false
       case first :: rest => derivee(e, first) match {
-        case Vide       => true
-        case Impossible => false
-        case value      => checkIfThereIsARegExMatch(value, rest)
+        case Vide       => Some(List(first))
+        case Impossible => None
+        case value      => prefixeMatch(value, rest) match {
+          case None        => None
+          case Some(value) => Some(first :: value)
+        }
       }
     }
-
-
-
-    //    (e, lb) match {
-    //      case (Vide, _)              => true
-    //      case (Impossible, _)        => false
-    //      case (_, Nil)               => false
-    //      case (value, first :: rest) => checkIfThereIsARegExMatch(derivee(value, first), rest)
-    //    }
   }
 
   /**
@@ -195,8 +155,21 @@ object RExpMatcher {
    * @param lb   une liste de bases azotées
    * @return la sous-liste de lb située après le préfixe pref
    */
-  // TODO V2
-  def suppPrefixe(pref: List[Base], lb: List[Base]): List[Base] = ???
+  def suppPrefixe(pref: List[Base], lb: List[Base]): List[Base] = {
+    (pref, lb) match {
+      case (Nil, _)                                   => lb
+      case (_, Nil)                                   => Nil
+      case (firstPREF :: restPREF, firstLB :: restLB) =>
+        if (firstPREF != firstLB) {
+          suppPrefixe(pref, restLB)
+        } else {
+          suppPrefixe(restPREF, restLB) match {
+            case Nil   => suppPrefixe(pref, restLB)
+            case value => value
+          }
+        }
+    }
+  }
 
   /**
    * @param e  une expression régulière
@@ -205,8 +178,15 @@ object RExpMatcher {
    *         base après base, les sous-listes de lb décrites par e.
    *         Les basei sont les bases de lb dans l'ordre.
    */
-  // TODO V2
-  def tousLesMatchs(e: RExp, lb: List[Base]): List[(Marqueur, Base)] = ???
+  def tousLesMatchs(e: RExp, lb: List[Base]): List[(Marqueur, Base)] = {
+    lb match {
+      case Nil           => Nil
+      case first :: rest => prefixeMatch(e, lb) match {
+        case None         => (NonMarque, first) :: tousLesMatchs(e, rest)
+        case Some(prefix) => sequenceDecrite(prefix) ++ tousLesMatchs(e, suppPrefixe(prefix, lb))
+      }
+    }
+  }
 
   /**
    * @param lbm une liste de bases marquées selon un résultat de recherche
