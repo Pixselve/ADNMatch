@@ -39,11 +39,6 @@ object ADNMatchV2 extends App {
     }
   }
 
-  //  userLoop()
-
-
-  //  println(prefixeMatchBACK(litRExp("(TC)(C)").getOrElse(Impossible), List(A, T, G, C, T, C, C, T, G, G, C, T, G, T, T, T, T, G, T, A, C, T, T, T, T, T, A)))
-  //  println(prefixeMatch(litRExp("(TC)(C)").getOrElse(Impossible), List(A, T, G, C, T, C, C, T, G, G, C, T, G, T, T, T, T, G, T, A, C, T, T, T, T, T, A)))
-  println(suppPrefixe(prefixeMatch(NFois(UneBase(T), 3), List(T, A, T, T, C, C, T, T, T, A, G, A)).getOrElse(Nil), List(T, A, T, T, C, C, T, T, T, A, G, A)))
+    userLoop()
 
 }

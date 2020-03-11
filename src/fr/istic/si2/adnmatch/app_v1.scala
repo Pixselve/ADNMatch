@@ -23,7 +23,10 @@ object ADNMatchV1 extends App {
   def userLoop(): Unit = {
     val exp = askExpression()
     println(rExpToString(exp))
-//    println(listeBasesToString(getOrElseNil(deroule(exp))))
+    println(deroule(exp) match {
+      case None        => "❗ Votre expression ne décrit aucune séquence..."
+      case Some(bases) => listeBasesToString(bases)
+    })
     println("Recommencer ? y/N")
 
     scala.io.StdIn.readLine() match {
@@ -32,7 +35,6 @@ object ADNMatchV1 extends App {
     }
 
   }
-
 
 
   def askExpression(): RExp = {
