@@ -49,9 +49,9 @@ object RExpMatcher {
         }
       case Repete(e1)     =>
         derivee(e1, b) match {
-          case Impossible => Impossible
-          case Vide       => Repete(e1)
-          case value: RExp      => Concat(value, Repete(e1))
+          case Impossible  => Impossible
+          case Vide        => Repete(e1)
+          case value: RExp => Concat(value, Repete(e1))
         }
       case Concat(e1, e2) =>
         if (checkIfRExpEqualsEmpty(e1)) {
@@ -123,7 +123,7 @@ object RExpMatcher {
   /**
    * @param lb     une liste de bases azotées
    * @param isBlue un boolean
-   * @return la liste des bases de lb, dans l'ordre, marquées pour indiquer que la totalité de lb est décrite
+   * @return la liste des bases de lb, dans l'ordre, marquées selon isBlue pour indiquer que la totalité de lb est décrite
    */
   def sequenceDecrite(lb: List[Base], isBlue: Boolean): List[(Marqueur, Base)] = {
     lb match {
@@ -154,9 +154,9 @@ object RExpMatcher {
     lb match {
       case Nil           => None
       case first :: rest => derivee(e, first) match {
-        case Vide       => Some(List(first))
-        case Impossible => None
-        case value:  RExp      => prefixeMatch(value, rest) match {
+        case Vide        => Some(List(first))
+        case Impossible  => None
+        case value: RExp => prefixeMatch(value, rest) match {
           case None        => None
           case Some(value) => Some(first :: value)
         }
@@ -178,7 +178,7 @@ object RExpMatcher {
           suppPrefixe(pref, restLB)
         } else {
           suppPrefixe(restPREF, restLB) match {
-            case Nil   => suppPrefixe(pref, restLB)
+            case Nil               => suppPrefixe(pref, restLB)
             case value: List[Base] => value
           }
         }
@@ -207,7 +207,7 @@ object RExpMatcher {
    * @param lb     une liste de bases
    * @param isBlue un boolean
    * @return une liste  (m1, base1)::...::(mN,baseN)::Nil, qui marque,
-   *         base après base, les sous-listes de lb décrites par e.
+   *         base après base, les sous-listes de lb décrites par e, en alternant les marqueurs.
    *         Les basei sont les bases de lb dans l'ordre.
    */
   def tousLesMatchs(e: RExp, lb: List[Base], isBlue: Boolean): List[(Marqueur, Base)] = {
