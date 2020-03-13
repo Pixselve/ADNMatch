@@ -14,6 +14,10 @@ object ADNMatchV2 extends App {
 
   println("ADNMatch Version 2")
 
+  /**
+   * Boucle d'interaction qui lit une expression régulière au clavier, l'affiche,
+   * lit une séquence et indique si cette séquence correspond entièrement à l'expression régulière
+   */
   def userLoop(): Unit = {
     val exp = askExpression()
     println(rExpToString(exp))
@@ -31,6 +35,11 @@ object ADNMatchV2 extends App {
 
   }
 
+  /**
+   * Demande à l'utilissateur d'entrer une séquence au clavier
+   *
+   * @return La séquence correcte entrée au clavier
+   */
   def askSequence(): List[Base] = {
     println("Entrez une séquence")
     lireSequence() match {
@@ -39,6 +48,5 @@ object ADNMatchV2 extends App {
     }
   }
 
-    userLoop()
-
+      userLoop()
 }

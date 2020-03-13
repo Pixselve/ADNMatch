@@ -16,7 +16,6 @@ import fr.istic.si2.adnmatch.RExpMatcher._
 
 class ADNMatchTest {
 
-  // TODO V1 V2 V3 - A compléter
 
   // Vous aurez besoin de réaliser les imports adéquats.
   // Si besoin, demandez de l'aide à votre encadrant.

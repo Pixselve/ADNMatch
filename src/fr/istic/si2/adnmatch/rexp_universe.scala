@@ -2,7 +2,6 @@ package fr.istic.si2.adnmatch
 
 import fr.istic.si2.scribble._
 import fr.istic.si2.adnmatchlib._
-import fr.istic.si2.adnmatch._
 import fr.istic.si2.adnmatch.FonctionsRExp._
 import fr.istic.si2.adnmatch.RExpMatcher._
 import fr.istic.si2.adnmatch.SequencesImages._
@@ -19,9 +18,13 @@ import fr.istic.si2.adnmatch.SequencesImages._
  * - et l'état final.
  */
 sealed trait Etat
+
 case object Init extends Etat
+
 case class Normal(re: RExp, s: List[(Marqueur, Base)]) extends Etat
+
 case class Erreur(re: RExp, s: List[(Marqueur, Base)]) extends Etat
+
 case object End extends Etat
 
 object ADNMatchUniverse extends Universe[Etat] {
@@ -39,7 +42,7 @@ object ADNMatchUniverse extends Universe[Etat] {
   /**
    * Hauteur en pixels de la fenêtre graphique
    */
-  val HEIGHT: Int = WIDTH
+  val HEIGHT: Int = 1000
 
   /**
    * @return l'état initial de l'application
@@ -49,6 +52,7 @@ object ADNMatchUniverse extends Universe[Etat] {
   /**
    * Lit au clavier une chaîne de caractères représentant une expression régulière.
    * Validation au clavier avec la touche 'entrée'
+   *
    * @return si elle existe, l'expression régulière correspondant à la chaîne entrée
    */
   def nouvelleRExp(): Option[RExp] = {
@@ -88,7 +92,7 @@ object ADNMatchUniverse extends Universe[Etat] {
           case None     => Erreur(re, nms)
         }
 
-      // Déterminer la correspondance complète: une séquence et une expression régulière doivent être présents
+      // Déterminer la correspotousLesMatchsndance complète: une séquence et une expression régulière doivent être présents
       case (Normal(re, lsm), KeyPressed(KeyAscii('c'))) =>
         val noMarks: List[Base] = sansMarqueurs(lsm)
         if (matchComplet(re, noMarks)) Normal(re, sequenceDecrite(noMarks))
@@ -98,6 +102,9 @@ object ADNMatchUniverse extends Universe[Etat] {
       case (Normal(re, lsm), KeyPressed(KeyAscii('m'))) =>
         Normal(re, tousLesMatchs(re, sansMarqueurs(lsm)))
 
+      case (Normal(re, lsm), KeyPressed(KeyAscii('k'))) =>
+        Normal(re, tousLesMatchs(re, sansMarqueurs(lsm), isBlue = true))
+
       // Effacer la recherche de motif: une séquence et une expression régulière doivent être présents
       // On conserve l'expression régulière
       case (Normal(re, lsm), KeyPressed(KeyAscii('a'))) =>
@@ -106,12 +113,13 @@ object ADNMatchUniverse extends Universe[Etat] {
       // Arrêter l'application : possible à tout moment
       case (_, KeyPressed(KeyAscii('q'))) => End
 
-      case _                              => s
+      case _ => s
     }
   }
 
   /**
    * Condition d'arrêt de l'application réactive
+   *
    * @param s l'état courant de l'application
    * @return vrai ssi l'application réactive se suspend dans cet état (état final)
    */
@@ -151,10 +159,10 @@ object ADNMatchUniverse extends Universe[Etat] {
   }
 
   /**
-   * @param d une chaîne de caractères
-   * @param i une image
+   * @param d     une chaîne de caractères
+   * @param i     une image
    * @param front une couleur pour la police de caractères
-   * @param back une couleur pour l'arrière plan
+   * @param back  une couleur pour l'arrière plan
    * @return une image comprenant i, et indiquant sa description d au dessus
    */
   def description(d: String, i: Image, front: Color, back: Color): Image = {
@@ -168,10 +176,10 @@ object ADNMatchUniverse extends Universe[Etat] {
   }
 
   /**
-   * @param t une chaîne de caractères
+   * @param t     une chaîne de caractères
    * @param descr un boolean
    * @param front une couleur pour la police de caractères
-   * @param back une couleur pour l'arrière plan
+   * @param back  une couleur pour l'arrière plan
    * @return une image reduite au texte t si descr est faux
    *         une image du text t et sa description "Message" sinon
    */
@@ -209,13 +217,51 @@ object ADNMatchUniverse extends Universe[Etat] {
   def imageRExp(re: RExp): Image = {
     description(
       "Expression régulière recherchée:",
-      message(rExpToString(re), false, GREEN, BLACK),
+      message(rExpToString(re), descr = false, GREEN, BLACK),
       GREEN, BLACK)
   }
 
   /**
-   * @param t une chaîne
-   * @param re une expression régulière
+   * @param count un entier représentant le nombre de séquence
+   * @return une image illustrant count
+   */
+  def imageCountSequences(count: Int): Image = {
+    description("Nombre de sous séquences:", message(
+      count match {
+        case -1         => "Ajoutez une séquence et une expression régulière puis appuyez sur k"
+        case value: Int => s"Il y a exactement ${value} sous séquences"
+      }, descr = false, RED, WHITE), RED, WHITE)
+  }
+
+  /**
+   * @param l une liste de bases marquées
+   * @return Le nombre de sous-séquences dans la séquence
+   */
+  def countSequences(l: List[(Marqueur, Base)]): Int = {
+    l match {
+      case Nil                                          => 0
+      case (Marque, _) :: Nil                           => 1
+      case (MarqueOdd, _) :: Nil                        => 1
+      case (fistMarker, _) :: (secondMarker, _) :: rest => if (fistMarker != secondMarker) 1 + countSequences(rest) else 0 + countSequences(rest)
+      case _ :: rest                                    => 0 + countSequences(rest)
+    }
+  }
+
+  /**
+   * @param l une liste de bases marquées
+   * @return Si oui ou non la séquence est dénombrable
+   */
+  def checkIfSequenceIsCountable(l: List[(Marqueur, Base)]): Boolean = {
+    l match {
+      case Nil                 => false
+      case (MarqueOdd, _) :: _ => true
+      case _ :: rest           => checkIfSequenceIsCountable(rest)
+    }
+  }
+
+  /**
+   * @param t   une chaîne
+   * @param re  une expression régulière
    * @param lmb une liste de bases marquées
    * @return une image permettant de visualiser :
    *         - un message contenant le texte t
@@ -223,7 +269,10 @@ object ADNMatchUniverse extends Universe[Etat] {
    *         - la liste de bases marquées lmb
    */
   def cadre(t: String, re: RExp, lmb: List[(Marqueur, Base)]): Image = {
-    below(message(t, true, WHITE, BLUE), sep(BLUE), imageRExp(re), sep(BLACK), sequence(lmb))
+    below(message(t, descr = true, WHITE, BLUE), sep(BLUE), imageCountSequences(
+      if (checkIfSequenceIsCountable(lmb))
+        countSequences(lmb) else -1
+    ), sep(BLACK), imageRExp(re), sep(BLACK), sequence(lmb))
   }
 
 }

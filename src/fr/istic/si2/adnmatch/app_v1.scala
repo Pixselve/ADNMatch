@@ -20,6 +20,10 @@ object ADNMatchV1 extends App {
   val exampleRExp2 = Choix(UneBase(G), UneBase(T))
   val exampleRExp3 = Repete(UneBase(G))
 
+  /**
+   * Une boucle d'interaction qui lit une expression et qui indique si cette expression
+   * décrit ou non une séquence. Si oui, l'expression est affichée
+   */
   def userLoop(): Unit = {
     val exp = askExpression()
     println(rExpToString(exp))
@@ -36,7 +40,11 @@ object ADNMatchV1 extends App {
 
   }
 
-
+  /**
+   * Lit une expression régulière au clavier
+   *
+   * @return l'expression régulière correcte
+   */
   def askExpression(): RExp = {
     println("Entrez une expression")
     litRExp(scala.io.StdIn.readLine()) match {

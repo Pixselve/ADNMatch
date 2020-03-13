@@ -12,6 +12,8 @@ sealed trait Marqueur
 
 case object Marque extends Marqueur
 
+case object MarqueOdd extends Marqueur
+
 case object NonMarque extends Marqueur
 
 object RExpMatcher {
@@ -49,7 +51,7 @@ object RExpMatcher {
         derivee(e1, b) match {
           case Impossible => Impossible
           case Vide       => Repete(e1)
-          case value      => Concat(value, Repete(e1))
+          case value: RExp      => Concat(value, Repete(e1))
         }
       case Concat(e1, e2) =>
         if (checkIfRExpEqualsEmpty(e1)) {
@@ -119,6 +121,18 @@ object RExpMatcher {
   }
 
   /**
+   * @param lb     une liste de bases azotées
+   * @param isBlue un boolean
+   * @return la liste des bases de lb, dans l'ordre, marquées pour indiquer que la totalité de lb est décrite
+   */
+  def sequenceDecrite(lb: List[Base], isBlue: Boolean): List[(Marqueur, Base)] = {
+    lb match {
+      case Nil           => Nil
+      case first :: rest => (if (isBlue) Marque else MarqueOdd, first) :: sequenceDecrite(rest, isBlue)
+    }
+  }
+
+  /**
    * @param lb une liste de bases azotées
    * @return la liste des bases de lb, dans l'ordre, marquées pour indiquer
    *         que la totalité de lb n'est pas décrite
@@ -142,7 +156,7 @@ object RExpMatcher {
       case first :: rest => derivee(e, first) match {
         case Vide       => Some(List(first))
         case Impossible => None
-        case value      => prefixeMatch(value, rest) match {
+        case value:  RExp      => prefixeMatch(value, rest) match {
           case None        => None
           case Some(value) => Some(first :: value)
         }
@@ -165,7 +179,7 @@ object RExpMatcher {
         } else {
           suppPrefixe(restPREF, restLB) match {
             case Nil   => suppPrefixe(pref, restLB)
-            case value => value
+            case value: List[Base] => value
           }
         }
     }
@@ -184,6 +198,24 @@ object RExpMatcher {
       case first :: rest => prefixeMatch(e, lb) match {
         case None         => (NonMarque, first) :: tousLesMatchs(e, rest)
         case Some(prefix) => sequenceDecrite(prefix) ++ tousLesMatchs(e, suppPrefixe(prefix, lb))
+      }
+    }
+  }
+
+  /**
+   * @param e      une expression régulière
+   * @param lb     une liste de bases
+   * @param isBlue un boolean
+   * @return une liste  (m1, base1)::...::(mN,baseN)::Nil, qui marque,
+   *         base après base, les sous-listes de lb décrites par e.
+   *         Les basei sont les bases de lb dans l'ordre.
+   */
+  def tousLesMatchs(e: RExp, lb: List[Base], isBlue: Boolean): List[(Marqueur, Base)] = {
+    lb match {
+      case Nil           => Nil
+      case first :: rest => prefixeMatch(e, lb) match {
+        case None         => (NonMarque, first) :: tousLesMatchs(e, rest, isBlue)
+        case Some(prefix) => sequenceDecrite(prefix, isBlue) ++ tousLesMatchs(e, suppPrefixe(prefix, lb), !isBlue)
       }
     }
   }
