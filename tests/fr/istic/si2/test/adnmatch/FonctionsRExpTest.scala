@@ -7,7 +7,10 @@ import org.junit.Assert.{assertEquals, assertTrue}
 import org.junit.Test
 
 class FonctionsRExpTest {
-
+  /**
+   * @param stringToCheck une expression régulière sous forme d'une chaine de caractère
+   * @return si rExpToString de l'expression régulière donne bien la même chaine de caractère
+   */
   def checkIfSame(stringToCheck: String): Boolean = {
     litRExp(stringToCheck) match {
       case None      => false
@@ -15,6 +18,9 @@ class FonctionsRExpTest {
     }
   }
 
+  /**
+   * Tests de la fonction rExpToString
+   */
   @Test def rExpToStringTest(): Unit = {
     assertTrue("Single base", checkIfSame("A"))
     assertTrue("Any Base", checkIfSame("."))
@@ -30,6 +36,9 @@ class FonctionsRExpTest {
     assertTrue("Impossible", checkIfSame("@"))
   }
 
+  /**
+   * Tests de la fonction listeBasesToString
+   */
   @Test def listeBasesToStringTest(): Unit = {
     assertEquals("Empty", "", listeBasesToString(List()))
     assertEquals("1 base", "A", listeBasesToString(List(A)))
@@ -38,6 +47,9 @@ class FonctionsRExpTest {
 
   }
 
+  /**
+   * Tests de la fonction deroule
+   */
   @Test def derouleTest(): Unit = {
     assertEquals("Impossible", None, deroule(Impossible))
     assertEquals("Empty", None, deroule(Vide))

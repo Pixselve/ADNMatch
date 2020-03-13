@@ -16,7 +16,7 @@ object SequencesImages {
   def lignes(lmb: List[(Marqueur, Base)], tligne: Int): List[List[(Marqueur, Base)]] = {
     recupereReste(lmb, tligne) match {
       case Nil  => List(lmb)
-      case rest => List(recupereLigne(lmb, tligne)) ++ lignes(rest, tligne)
+      case rest: List[(Marqueur, Base)] => List(recupereLigne(lmb, tligne)) ++ lignes(rest, tligne)
     }
   }
 

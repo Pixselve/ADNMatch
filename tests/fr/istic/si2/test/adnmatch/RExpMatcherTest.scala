@@ -6,6 +6,9 @@ import org.junit.Test
 import org.junit.Assert._
 
 class RExpMatcherTest {
+  /**
+   * Tests de la fonction sansMarqueurs
+   */
   @Test def sansMarqueursTest(): Unit = {
     assertEquals("first element marked", List(A, T, G), sansMarqueurs(List((Marque, A), (NonMarque, T), (NonMarque, G))))
     assertEquals("middle element marked", List(A, T, G), sansMarqueurs(List((NonMarque, A), (Marque, T), (NonMarque, G))))
@@ -14,6 +17,9 @@ class RExpMatcherTest {
     assertEquals("two elements marked, that follow each other", List(A, T, G), sansMarqueurs(List((NonMarque, A), (Marque, T), (Marque, G))))
   }
 
+  /**
+   * Tests de la fonction tousLesMatchs
+   */
   @Test def tousLesMatchsTest(): Unit = {
     assertEquals("Empty List", List(), tousLesMatchs(UneBase(T), List()))
     assertEquals("One element marked", List((Marque, A)), tousLesMatchs(UneBase(A), List(A)))
@@ -24,6 +30,9 @@ class RExpMatcherTest {
     assertEquals("1 of 2 element marked (last)", List((NonMarque, A), (Marque, T)), tousLesMatchs(UneBase(T), List(A, T)))
   }
 
+  /**
+   * Tests de la fonction sequenceNonDecrite
+   */
   @Test def sequenceNonDecriteTest(): Unit = {
     assertEquals("Empty list", List(), sequenceNonDecrite(List()))
     assertEquals("1 element", List((NonMarque, A)), sequenceNonDecrite(List(A)))
@@ -31,6 +40,9 @@ class RExpMatcherTest {
     assertEquals("3 elements", List((NonMarque, A), (NonMarque, T), (NonMarque, G)), sequenceNonDecrite(List(A, T, G)))
   }
 
+  /**
+   * Tests de la fonction messageResultat
+   */
   @Test def messageResultatTest(): Unit = {
     assertEquals("Nil list", "Il n'y a pas de sous-séquence", messageResultat(Nil))
     assertEquals("1 element not marked", "Il n'y a pas de sous-séquence", messageResultat(List((NonMarque, A))))
@@ -40,22 +52,37 @@ class RExpMatcherTest {
     assertEquals("middle element marked", "Il y a au moins une sous-séquence", messageResultat(List((NonMarque, A), (Marque, T), (NonMarque, G))))
     assertEquals("last element marked", "Il y a au moins une sous-séquence", messageResultat(List((NonMarque, A), (NonMarque, T), (Marque, G))))
     assertEquals("two elements marked, first and last", "Il y a au moins une sous-séquence", messageResultat(List((Marque, A), (NonMarque, T), (Marque, G))))
-    assertEquals("two elements marked, that follow each other", "Il y a au moins une sous-séquence", messageResultat(List((NonMarque, A), (Marque, T), (Marque, G))))
+    assertEquals("two elements marked, that follow each other", "Il y a au moins une sous-séquence",
+      messageResultat(List((NonMarque, A), (Marque, T), (Marque, G))))
   }
 
+  /**
+   * Tests de la fonction annulerResultat
+   */
   @Test def annulerResultatTest(): Unit = {
-    assertEquals("first element marked", List((NonMarque, A), (NonMarque, T), (NonMarque, G)), annulerResultat(List((Marque, A), (NonMarque, T), (NonMarque, G))))
-    assertEquals("middle element marked", List((NonMarque, A), (NonMarque, T), (NonMarque, G)), annulerResultat(List((NonMarque, A), (Marque, T), (NonMarque, G))))
-    assertEquals("last element marked", List((NonMarque, A), (NonMarque, T), (NonMarque, G)), annulerResultat(List((NonMarque, A), (NonMarque, T), (Marque, G))))
-    assertEquals("two elements marked, first and last", List((NonMarque, A), (NonMarque, T), (NonMarque, G)), annulerResultat(List((Marque, A), (NonMarque, T), (Marque, G))))
-    assertEquals("two elements marked, that follow each other", List((NonMarque, A), (NonMarque, T), (NonMarque, G)), annulerResultat(List((NonMarque, A), (Marque, T), (Marque, G))))
+    assertEquals("first element marked", List((NonMarque, A), (NonMarque, T),
+      (NonMarque, G)), annulerResultat(List((Marque, A), (NonMarque, T), (NonMarque, G))))
+    assertEquals("middle element marked", List((NonMarque, A), (NonMarque, T),
+      (NonMarque, G)), annulerResultat(List((NonMarque, A), (Marque, T), (NonMarque, G))))
+    assertEquals("last element marked", List((NonMarque, A), (NonMarque, T),
+      (NonMarque, G)), annulerResultat(List((NonMarque, A), (NonMarque, T), (Marque, G))))
+    assertEquals("two elements marked, first and last", List((NonMarque, A),
+      (NonMarque, T), (NonMarque, G)), annulerResultat(List((Marque, A), (NonMarque, T), (Marque, G))))
+    assertEquals("two elements marked, that follow each other", List((NonMarque, A),
+      (NonMarque, T), (NonMarque, G)), annulerResultat(List((NonMarque, A), (Marque, T), (Marque, G))))
   }
 
+  /**
+   * Tests de la fonction checkIfRExpEqualsEmpty
+   */
   @Test def checkIfRExpEqualsEmptyTest(): Unit = {
     assertTrue("Empty", checkIfRExpEqualsEmpty(Vide))
     assertFalse("Impossible", checkIfRExpEqualsEmpty(Impossible))
   }
 
+  /**
+   * Tests de la fonction derivee
+   */
   @Test def deriveeTest(): Unit = {
     assertEquals("Impossible", Impossible, derivee(Impossible, A))
     assertEquals("Empty", Impossible, derivee(Vide, A))
@@ -78,9 +105,13 @@ class RExpMatcherTest {
     assertEquals("Repeat two times choice", Choix(UneBase(A), UneBase(T)), derivee(NFois(Choix(UneBase(A), UneBase(T)), 2), A))
     assertEquals("TA does not starts by an A", Impossible, derivee(Concat(UneBase(T), UneBase(A)), A))
     assertEquals("AT starts by an A and leave T", UneBase(T), derivee(Concat(UneBase(A), UneBase(T)), A))
-    assertEquals("(A|T)(G|C) could starts with a A and leaves (G|C)", Choix(UneBase(G), UneBase(C)), derivee(Concat(Choix(UneBase(A), UneBase(T)), Choix(UneBase(G), UneBase(C))), A))
+    assertEquals("(A|T)(G|C) could starts with a A and leaves (G|C)",
+      Choix(UneBase(G), UneBase(C)), derivee(Concat(Choix(UneBase(A), UneBase(T)), Choix(UneBase(G), UneBase(C))), A))
   }
 
+  /**
+   * Tests de la fonction prefixeMatch
+   */
   @Test def prefixeMatchTest(): Unit = {
     assertEquals("One element list which is prefix", Some(List(A)), prefixeMatch(UneBase(A), List(A)))
     assertEquals("One element list which is not", None, prefixeMatch(UneBase(T), List(A)))
@@ -92,6 +123,9 @@ class RExpMatcherTest {
 
   }
 
+  /**
+   * Tests de la fonction sequenceDecrite
+   */
   @Test def sequenceDecriteTest(): Unit = {
     assertEquals("Empty list", List(), sequenceDecrite(List()))
     assertEquals("1 element", List((Marque, A)), sequenceDecrite(List(A)))
@@ -99,6 +133,9 @@ class RExpMatcherTest {
     assertEquals("3 elements", List((Marque, A), (Marque, T), (Marque, G)), sequenceDecrite(List(A, T, G)))
   }
 
+  /**
+   * Tests de la fonction matchComplet
+   */
   @Test def matchCompletTest(): Unit = {
     assertTrue("single base", matchComplet(UneBase(A), List(A)))
     assertTrue("concat single bases", matchComplet(Concat(UneBase(A), UneBase(T)), List(A, T)))
@@ -108,6 +145,9 @@ class RExpMatcherTest {
     assertTrue("repeatChoice", matchComplet(Repete(Choix(UneBase(A), UneBase(T))), List(A, T, T, T, A)))
   }
 
+  /**
+   * Tests de la fonction suppPrefixe
+   */
   @Test def suppPrefixeTest(): Unit = {
     assertEquals("One element prefix", List(G, G, C), suppPrefixe(List(A), List(A, G, G, C)))
     assertEquals("Two elements prefix", List(G, G, T, A), suppPrefixe(List(A, T), List(A, T, G, G, T, A)))
